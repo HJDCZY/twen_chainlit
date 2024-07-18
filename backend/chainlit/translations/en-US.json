@@ -1,0 +1,232 @@
+{
+  "components": {
+    "atoms": {
+      "buttons": {
+        "userButton": {
+          "menu": {
+            "settings": "设置",
+            "settingsKey": "",
+            "APIKeys": "API Keys",
+            "logout": "退出（清空对话）"
+          }
+        }
+      }
+    },
+    "molecules": {
+      "newChatButton": {
+        "newChat": "新的对话"
+      },
+      "tasklist": {
+        "TaskList": {
+          "title": "🗒️ Task List",
+          "loading": "Loading...",
+          "error": "An error occured"
+        }
+      },
+      "attachments": {
+        "cancelUpload": "Cancel upload",
+        "removeAttachment": "Remove attachment"
+      },
+      "newChatDialog": {
+        "createNewChat": "开启新的对话？",
+        "clearChat": "这会停止当前消息并创建新的对话",
+        "cancel": "取消",
+        "confirm": "确认"
+      },
+      "settingsModal": {
+        "settings": "设置",
+        "expandMessages": "展开对话",
+        "hideChainOfThought": "关闭CoT",
+        "darkMode": "暗色模式"
+      },
+      "detailsButton": {
+        "using": "Using",
+        "running": "Running",
+        "took_one": "Took {{count}} step",
+        "took_other": "Took {{count}} steps"
+      },
+      "auth": {
+        "authLogin": {
+          "title": "天问大模型 Twen",
+          "form": {
+            "email": "Email address",
+            "password": "Password",
+            "noAccount": "Don't have an account?",
+            "alreadyHaveAccount": "Already have an account?",
+            "signup": "Sign Up",
+            "signin": "Sign In",
+            "or": "OR",
+            "continue": "Continue",
+            "forgotPassword": "Forgot password?",
+            "passwordMustContain": "Your password must contain:",
+            "emailRequired": "email is a required field",
+            "passwordRequired": "password is a required field"
+          },
+          "error": {
+            "default": "Unable to sign in.",
+            "signin": "Try signing in with a different account.",
+            "oauthsignin": "Try signing in with a different account.",
+            "redirect_uri_mismatch": "The redirect URI is not matching the oauth app configuration.",
+            "oauthcallbackerror": "Try signing in with a different account.",
+            "oauthcreateaccount": "Try signing in with a different account.",
+            "emailcreateaccount": "Try signing in with a different account.",
+            "callback": "Try signing in with a different account.",
+            "oauthaccountnotlinked": "To confirm your identity, sign in with the same account you used originally.",
+            "emailsignin": "The e-mail could not be sent.",
+            "emailverify": "Please verify your email, a new email has been sent.",
+            "credentialssignin": "Sign in failed. Check the details you provided are correct.",
+            "sessionrequired": "Please sign in to access this page."
+          }
+        },
+        "authVerifyEmail": {
+          "almostThere": "You're almost there! We've sent an email to ",
+          "verifyEmailLink": "Please click on the link in that email to complete your signup.",
+          "didNotReceive": "Can't find the email?",
+          "resendEmail": "Resend email",
+          "goBack": "Go Back",
+          "emailSent": "Email sent successfully.",
+          "verifyEmail": "Verify your email address"
+        },
+        "providerButton": {
+          "continue": "Continue with {{provider}}",
+          "signup": "Sign up with {{provider}}"
+        },
+        "authResetPassword": {
+          "newPasswordRequired": "New password is a required field",
+          "passwordsMustMatch": "Passwords must match",
+          "confirmPasswordRequired": "Confirm password is a required field",
+          "newPassword": "New password",
+          "confirmPassword": "Confirm password",
+          "resetPassword": "Reset Password"
+        },
+        "authForgotPassword": {
+          "email": "Email address",
+          "emailRequired": "email is a required field",
+          "emailSent": "Please check the email address {{email}} for instructions to reset your password.",
+          "enterEmail": "Enter your email address and we will send you instructions to reset your password.",
+          "resendEmail": "Resend email",
+          "continue": "Continue",
+          "goBack": "Go Back"
+        }
+      }
+    },
+    "organisms": {
+      "chat": {
+        "history": {
+          "index": {
+            "showHistory": "历史输入",
+            "lastInputs": "最近输入",
+            "noInputs": "未查询到历史输入...",
+            "loading": "加载中..."
+          }
+        },
+        "inputBox": {
+          "input": {
+            "placeholder": "请输入你的问题..."
+          },
+          "speechButton": {
+            "start": "Start recording",
+            "stop": "Stop recording"
+          },
+          "SubmitButton": {
+            "sendMessage": "发送",
+            "stopTask": "停止生成"
+          },
+          "UploadButton": {
+            "attachFiles": "添加附件（暂不支持）"
+          },
+          "waterMark": {
+            "text": "**天问大模型生成内容仅供参考，请以最新政策文件为准。Powered by CIC@TJU**"
+          }
+        },
+        "Messages": {
+          "index": {
+            "running": "生成中...",
+            "executedSuccessfully": "executed successfully",
+            "failed": "失败",
+            "feedbackUpdated": "反馈已提交",
+            "updating": "正在提交"
+          }
+        },
+        "dropScreen": {
+          "dropYourFilesHere": "Drop your files here"
+        },
+        "index": {
+          "failedToUpload": "Failed to upload",
+          "cancelledUploadOf": "Cancelled upload of",
+          "couldNotReachServer": "天问正在升级，请稍后再试……",
+          "continuingChat": "Continuing previous chat"
+        },
+        "settings": {
+          "settingsPanel": "Settings panel",
+          "reset": "Reset",
+          "cancel": "Cancel",
+          "confirm": "Confirm"
+        }
+      },
+      "threadHistory": {
+        "sidebar": {
+          "filters": {
+            "FeedbackSelect": {
+              "feedbackAll": "全部反馈",
+              "feedbackPositive": "反馈：赞！",
+              "feedbackNegative": "反馈：踩！"
+            },
+            "SearchBar": {
+              "search": "搜索"
+            }
+          },
+          "DeleteThreadButton": {
+            "confirmMessage": "彻底删除该对话？",
+            "cancel": "取消",
+            "confirm": "确认",
+            "deletingChat": "正在删除",
+            "chatDeleted": "删除完毕"
+          },
+          "index": {
+            "pastChats": "历史对话"
+          },
+          "ThreadList": {
+            "empty": "无历史对话",
+            "today": "今日",
+            "yesterday": "昨日",
+            "previous7days": "7天内",
+            "previous30days": "30天内"
+          },
+          "TriggerButton": {
+            "closeSidebar": "折叠侧边栏",
+            "openSidebar": "展开侧边栏"
+          }
+        },
+        "Thread": {
+          "backToChat": "返回对话",
+          "chatCreatedOn": "这个对话创建于"
+        }
+      },
+      "header": {
+        "chat": "开始对话",
+        "readme": "关于我们",
+        "version": "版本更新"
+      }
+    }
+  },
+  "hooks": {
+    "useLLMProviders": {
+      "failedToFetchProviders": "Failed to fetch providers:"
+    }
+  },
+  "pages": {
+    "Design": {},
+    "Env": {
+      "savedSuccessfully": "Saved successfully",
+      "requiredApiKeys": "Required API Keys",
+      "requiredApiKeysInfo": "To use this app, the following API keys are required. The keys are stored on your device's local storage."
+    },
+    "Page": {
+      "notPartOfProject": "You are not part of this project."
+    },
+    "ResumeButton": {
+      "resumeChat": "Resume Chat"
+    }
+  }
+}
