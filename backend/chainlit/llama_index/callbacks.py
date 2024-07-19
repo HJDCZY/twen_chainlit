@@ -33,32 +33,21 @@ class LlamaIndexCallbackHandler(TokenCountingHandler):
             event_starts_to_ignore=event_starts_to_ignore,
             event_ends_to_ignore=event_ends_to_ignore,
         )
-        self.context = context_var.get()
 
         self.steps = {}
 
     def _get_parent_id(self, event_parent_id: Optional[str] = None) -> Optional[str]:
         if event_parent_id and event_parent_id in self.steps:
             return event_parent_id
-        elif self.context.current_step:
-            return self.context.current_step.id
-        elif self.context.session.root_message:
-            return self.context.session.root_message.id
+        elif context_var.get().current_step:
+            return context_var.get().current_step.id
+        elif context_var.get().session.root_message:
+            root_message = context_var.get().session.root_message
+            if root_message:
+                return root_message.id
+            return None
         else:
             return None
-
-    def _restore_context(self) -> None:
-        """Restore Chainlit context in the current thread
-
-        Chainlit context is local to the main thread, and LlamaIndex
-        runs the callbacks in its own threads, so they don't have a
-        Chainlit context by default.
-
-        This method restores the context in which the callback handler
-        has been created (it's always created in the main thread), so
-        that we can actually send messages.
-        """
-        context_var.set(self.context)
 
     def on_event_start(
         self,
@@ -69,13 +58,11 @@ class LlamaIndexCallbackHandler(TokenCountingHandler):
         **kwargs: Any,
     ) -> str:
         """Run when an event starts and return id of event."""
-        self._restore_context()
-        
         step_type: StepType = "undefined"
         if event_type == CBEventType.RETRIEVE:
-            step_type = "retrieval"
+            step_type = "tool"
         elif event_type == CBEventType.QUERY:
-            step_type = "retrieval"
+            step_type = "tool"
         elif event_type == CBEventType.LLM:
             step_type = "llm"
         else:
@@ -88,10 +75,11 @@ class LlamaIndexCallbackHandler(TokenCountingHandler):
             id=event_id,
             disable_feedback=True,
         )
+
         self.steps[event_id] = step
         step.start = utc_now()
         step.input = payload or {}
-        self.context.loop.create_task(step.send())
+        context_var.get().loop.create_task(step.send())
         return event_id
 
     def on_event_end(
@@ -104,11 +92,8 @@ class LlamaIndexCallbackHandler(TokenCountingHandler):
         """Run when an event ends."""
         step = self.steps.get(event_id, None)
 
-
         if payload is None or step is None:
             return
-
-        self._restore_context()
 
         step.end = utc_now()
 
@@ -117,16 +102,18 @@ class LlamaIndexCallbackHandler(TokenCountingHandler):
             source_nodes = getattr(response, "source_nodes", None)
             if source_nodes:
                 source_refs = ", ".join(
-                    [f"Source {idx}" for idx, _ in enumerate(source_nodes)])
+                    [f"Source {idx}" for idx, _ in enumerate(source_nodes)]
+                )
                 step.elements = [
                     Text(
                         name=f"Source {idx}",
                         content=source.text or "Empty node",
+                        display="side",
                     )
                     for idx, source in enumerate(source_nodes)
                 ]
                 step.output = f"Retrieved the following sources: {source_refs}"
-                self.context.loop.create_task(step.update())
+                context_var.get().loop.create_task(step.update())
 
         elif event_type == CBEventType.RETRIEVE:
             sources = payload.get(EventPayload.NODES)
@@ -137,12 +124,13 @@ class LlamaIndexCallbackHandler(TokenCountingHandler):
                 step.elements = [
                     Text(
                         name=f"Source {idx}",
+                        display="side",
                         content=source.node.get_text() or "Empty node",
                     )
                     for idx, source in enumerate(sources)
                 ]
                 step.output = f"Retrieved the following sources: {source_refs}"
-            self.context.loop.create_task(step.update())
+            context_var.get().loop.create_task(step.update())
 
         elif event_type == CBEventType.LLM:
             formatted_messages = payload.get(
@@ -173,7 +161,7 @@ class LlamaIndexCallbackHandler(TokenCountingHandler):
             token_count = self.total_llm_token_count or None
             raw_response = response.raw if response else None
             model = raw_response.get("model", None) if raw_response else None
-            
+
             if messages and isinstance(response, ChatResponse):
                 msg: ChatMessage = response.message
                 step.generation = ChatGeneration(
@@ -193,12 +181,12 @@ class LlamaIndexCallbackHandler(TokenCountingHandler):
                     token_count=token_count,
                 )
 
-            self.context.loop.create_task(step.update())
+            context_var.get().loop.create_task(step.update())
 
         else:
             step.output = payload
-            self.context.loop.create_task(step.update())
- 
+            context_var.get().loop.create_task(step.update())
+
         self.steps.pop(event_id, None)
 
     def _noop(self, *args, **kwargs):
@@ -206,4 +194,3 @@ class LlamaIndexCallbackHandler(TokenCountingHandler):
 
     start_trace = _noop
     end_trace = _noop
-

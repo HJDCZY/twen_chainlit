@@ -452,18 +452,16 @@ class LangchainTracer(BaseTracer, GenerationHelper, FinalStreamHelper):
         if run.run_type == "agent":
             step_type = "run"
         elif run.run_type == "chain":
-            pass
+            if not self.steps:
+                step_type = "run"
         elif run.run_type == "llm":
             step_type = "llm"
         elif run.run_type == "retriever":
-            step_type = "retrieval"
+            step_type = "tool"
         elif run.run_type == "tool":
             step_type = "tool"
         elif run.run_type == "embedding":
             step_type = "embedding"
-
-        if not self.steps:
-            step_type = "run"
 
         disable_feedback = not self._is_annotable(run)
 
@@ -533,7 +531,9 @@ class LangchainTracer(BaseTracer, GenerationHelper, FinalStreamHelper):
                     break
 
                 current_step.language = "json"
-                current_step.output = json.dumps(message_completion, indent=4, ensure_ascii=False)
+                current_step.output = json.dumps(
+                    message_completion, indent=4, ensure_ascii=False
+                )
             else:
                 completion_start = self.completion_generations[str(run.id)]
                 completion = generation.get("text", "")

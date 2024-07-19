@@ -79,10 +79,16 @@ const AuthLogin = ({
     setErrorState(error);
   }, [error]);
 
+  useEffect(() => {
+    if (!onPasswordSignIn && onOAuthSignIn && providers.length === 1) {
+      onOAuthSignIn(providers[0], callbackUrl);
+    }
+  }, [onPasswordSignIn, onOAuthSignIn, providers]);
+
   const formik = useFormik({
     initialValues: {
-      email: 'default',
-      password: '123456'
+      email: '',
+      password: ''
     },
     validationSchema: yup.object({
       email: yup
@@ -115,12 +121,6 @@ const AuthLogin = ({
     },
     validateOnBlur: true
   });
-  useEffect(() => {
-    // 检查表单是否有效，并且 email 和 password 是否都已填写
-    if (formik.values.email && formik.values.password) {
-      formik.submitForm();
-    }
-  }, [formik.isValid, formik.values.email, formik.values.password]);
 
   return (
     <AuthTemplate title={title} renderLogo={renderLogo}>

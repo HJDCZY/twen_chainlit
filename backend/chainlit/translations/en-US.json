@@ -20,7 +20,7 @@
         "TaskList": {
           "title": "🗒️ Task List",
           "loading": "Loading...",
-          "error": "An error occured"
+          "error": "发生了一些错误"
         }
       },
       "attachments": {
@@ -41,9 +41,7 @@
       },
       "detailsButton": {
         "using": "Using",
-        "running": "Running",
-        "took_one": "Took {{count}} step",
-        "took_other": "Took {{count}} steps"
+        "used": "Used"
       },
       "auth": {
         "authLogin": {
